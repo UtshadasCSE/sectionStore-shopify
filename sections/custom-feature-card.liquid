@@ -1,0 +1,134 @@
+{% comment %}
+  Section: Feature Cards with Background (no inline CSS)
+{% endcomment %}
+
+{{ 'custom-feature-card.css' | asset_url | stylesheet_tag }}
+
+<div class="feature-cards-section feature-cards-{{ section.id }}">
+  <div class="feature-cards-container">
+    <div class="feature-cards-header">
+      {% if section.settings.heading != blank %}
+        <h2 class="feature-cards-heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <div class="feature-cards-subheading">{{ section.settings.subheading }}</div>
+      {% endif %}
+    </div>
+
+    <div class="feature-cards-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'card' %}
+          <div class="feature-card feature-card-{{ block.id }}" {{ block.shopify_attributes }}>
+            <div class="feature-card-content">
+              {% if block.settings.title != blank %}
+                <h3 class="feature-card-title">{{ block.settings.title }}</h3>
+              {% endif %}
+              {% if block.settings.text != blank %}
+                <div class="feature-card-text">{{ block.settings.text }}</div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% style %}
+  /* Section specific */
+  .feature-cards-{{ section.id }} {
+    background-image: url('{{ section.settings.background_image | img_url: 'master' }}');
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  .feature-cards-{{ section.id }} .feature-cards-heading {
+    color: {{ section.settings.heading_color }};
+  }
+  .feature-cards-{{ section.id }} .feature-cards-subheading {
+    color: {{ section.settings.subheading_color }};
+  }
+
+  /* Blocks dynamic styles */
+  {% for block in section.blocks %}
+    {% if block.type == 'card' %}
+      .feature-card-{{ block.id }} {
+        background-color: {{ block.settings.background_color }};
+      }
+      .feature-card-{{ block.id }} .feature-card-title {
+        color: {{ block.settings.title_color }};
+      }
+      .feature-card-{{ block.id }} .feature-card-text {
+        color: {{ block.settings.description_color }};
+      }
+    {% endif %}
+  {% endfor %}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Custom Feature Cards",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "¿POR QUÉ ESTUDIAR EN TOULOUSE LAUTREC?" },
+    { "type": "color", "id": "heading_color", "label": "Heading Color", "default": "#000" },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Te impulsamos a ser un LÍDER CREATIVO...</p>"
+    },
+    { "type": "color", "id": "subheading_color", "label": "Subheading Color", "default": "#fff" },
+    { "type": "image_picker", "id": "background_image", "label": "Background Image" },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Content Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Card Title" },
+        { "type": "color", "id": "title_color", "label": "Title Color", "default": "#fff" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Card content goes here</p>" },
+        { "type": "color", "id": "description_color", "label": "Description Color", "default": "#fff" },
+        { "type": "color", "id": "background_color", "label": "Background Color", "default": "#ff5733" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Feature Cards",
+      "category": "custom",
+      "blocks": [{ "type": "card" }, { "type": "card" }, { "type": "card" }]
+    }
+  ]
+}
+{% endschema %}
