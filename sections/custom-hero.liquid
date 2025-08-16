@@ -1,0 +1,195 @@
+{% style %}
+  .hero-section {
+    background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.8)), url('{{ 'carbon-fiber-bg.jpg' | asset_url }}');
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    align-items:center;
+  }
+
+  .hero-text {
+    color: white;
+    padding: 2rem;
+  }
+
+  .hero-title {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    color:white;
+  }
+
+  .hero-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .pill-icon {
+    background: linear-gradient(45deg, #ffd700, #ffa500);
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .cta-button {
+    background: {{ section.settings.button_color }};
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 2rem;
+    transition: transform 0.3s ease;
+  }
+
+  .cta-button:hover {
+    transform: translateX(10px);
+  }
+
+  .play-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .play-button:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .product-showcase {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-image {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+  }
+
+  @media (max-width: 768px) {
+    .hero-content {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-title {
+      font-size: calc({{ section.settings.heading_size }}px * 0.7);
+    }
+  }
+{% endstyle %}
+
+<div class="hero-section">
+  <div class="hero-content">
+    <div class="hero-text">
+      <!-- ==== -->
+      <h2 class="hero-title">{{ section.settings.title_text }}</h2>
+
+      <a href="{{ section.settings.button_link }}" class="cta-button">
+        {{ section.settings.button_text }}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+
+      <div class="play-button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+          <polygon points="5,3 19,12 5,21"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="product-showcase">
+      {% if section.settings.product_image != blank %}
+        {{
+          section.settings.product_image
+          | image_url: width: 800
+          | image_tag: class: 'product-image', loading: 'lazy', alt: section.settings.product_image.alt
+          | escape
+        }}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product Image"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+
+    {
+      "type": "text",
+      "id": "title_text",
+      "label": "Title Text",
+      "default": "Featured Ingredients"
+    },
+
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Featured Ingredients"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button Color",
+      "default": "#ff4500"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Section",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
